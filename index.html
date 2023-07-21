@@ -16,14 +16,14 @@
       const imageUploadElement = document.getElementById("imageUpload");
 
       imageUploadElement.addEventListener("change", async (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const blob = await file.arrayBuffer().then((arrayBuffer) => new Blob([arrayBuffer]));
-    const app = await client("https://tiz9578-testing.hf.space/");
-    const result = await app.predict("/predict", [blob]);
-    predictionElement.innerHTML = `Prediction: ${result.data}`;
-  }
-});
+        const file = event.target.files[0];
+        if (file) {
+          const blob = await file.arrayBuffer().then((arrayBuffer) => new Blob([arrayBuffer]));
+          const app = await client("https://tiz9578-testing.hf.space/");
+          const result = await app.predict("/predict", [blob]);
+          predictionElement.innerHTML = `Prediction: ${result.data}`;
+        }
+      });
     </script>
   </body>
 </html>
