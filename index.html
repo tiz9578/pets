@@ -43,6 +43,7 @@
           const reader = new FileReader();
           reader.onload = function (e) {
             previewElement.src = e.target.result;
+            previewElement.style.display = "block";
           };
           reader.readAsDataURL(file);
           predictImage(file);
