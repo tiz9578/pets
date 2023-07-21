@@ -1,7 +1,14 @@
+html
 <!DOCTYPE html>
 <html>
   <head>
     <title>Cat or Dog Predictor</title>
+    <style>
+      #preview {
+        max-width: 500px;
+        max-height: 500px;
+      }
+    </style>
   </head>
   <body>
     <h1>Cat or Dog Predictor</h1>
@@ -9,28 +16,35 @@
     <br />
     <br />
     <div id="prediction"></div>
-
-    <script type="module">
+    <br />
+    <img id="preview" src="#" alt="Preview" />
+     <script type="module">
       import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client@latest?module";
-
-      const predictionElement = document.getElementById("prediction");
+       const predictionElement = document.getElementById("prediction");
       const imageUploadElement = document.getElementById("imageUpload");
-
-      async function predictImage(file) {
+      const previewElement = document.getElementById("preview");
+       async function predictImage(file) {
         try {
           const blob = await file.arrayBuffer().then((arrayBuffer) => new Blob([arrayBuffer]));
           const app = await client("https://tiz9578-testing.hf.space/");
           const result = await app.predict("/predict", [blob]);
-          predictionElement.innerHTML = `Prediction: ${JSON.stringify(result.data)}`;
+          const prediction = result.data[0];
+          const { label, confidences } = prediction;
+          const formattedPrediction = `Prediction: ${label} (${(confidences[0].confidence * 100).toFixed(2)}% confident)`;
+           predictionElement.innerHTML = formattedPrediction;
         } catch (error) {
           console.error(error);
           predictionElement.innerHTML = `Error: ${error.message}`;
         }
       }
-
-      imageUploadElement.addEventListener("change", (event) => {
+       imageUploadElement.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewElement.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
           predictImage(file);
         }
       });
