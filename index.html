@@ -21,7 +21,7 @@
           const blob = await file.arrayBuffer().then((arrayBuffer) => new Blob([arrayBuffer]));
           const app = await client("https://tiz9578-testing.hf.space/");
           const result = await app.predict("/predict", [blob]);
-          predictionElement.innerHTML = `Prediction: ${result.data}`;
+          predictionElement.innerHTML = `Prediction: ${JSON.stringify(result.data)}`;
         } catch (error) {
           console.error(error);
           predictionElement.innerHTML = `Error: ${error.message}`;
