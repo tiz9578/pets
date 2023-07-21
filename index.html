@@ -15,13 +15,22 @@
       const predictionElement = document.getElementById("prediction");
       const imageUploadElement = document.getElementById("imageUpload");
 
-      imageUploadElement.addEventListener("change", async (event) => {
-        const file = event.target.files[0];
-        if (file) {
+      async function predictImage(file) {
+        try {
           const blob = await file.arrayBuffer().then((arrayBuffer) => new Blob([arrayBuffer]));
           const app = await client("https://tiz9578-testing.hf.space/");
           const result = await app.predict("/predict", [blob]);
           predictionElement.innerHTML = `Prediction: ${result.data}`;
+        } catch (error) {
+          console.error(error);
+          predictionElement.innerHTML = `Error: ${error.message}`;
+        }
+      }
+
+      imageUploadElement.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          predictImage(file);
         }
       });
     </script>
